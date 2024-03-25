@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "521086661246",
+    "project_id": "zwigzo-food",
+    "storage_bucket": "zwigzo-food.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:521086661246:android:ff10a97fb0c2622a9c9e2f",
+        "android_client_info": {
+          "package_name": "com.example.foodapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCklsF9BJbMJAFNRJFararMY8iFw8Yy8iY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

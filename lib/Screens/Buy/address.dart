@@ -12,12 +12,15 @@ class address extends StatefulWidget {
   final String selectedItemID;
   final String categoryName;
   double? totalprize;
+  int ? quantity;
 
   address(
       {required this.categoryDoc,
       required this.selectedItemID,
       required this.categoryName,
-      required this.totalprize});
+      required this.totalprize,
+      required this.quantity,
+      });
 
   @override
   addressState createState() => addressState(
@@ -25,6 +28,7 @@ class address extends StatefulWidget {
         categoryDoc: categoryDoc,
         selectedItemID: selectedItemID,
         totalprize: totalprize,
+        quantity : quantity,
       );
 }
 
@@ -34,12 +38,15 @@ class addressState extends State<address> {
   final String selectedItemID;
   final String categoryName;
   double? totalprize;
+  int? quantity;
 
   addressState(
       {required this.categoryDoc,
       required this.selectedItemID,
       required this.categoryName,
-      required this.totalprize});
+      required this.totalprize,
+      required this.quantity,
+      });
 
   final CollectionReference users =
       FirebaseFirestore.instance.collection('users');
@@ -336,7 +343,9 @@ class addressState extends State<address> {
                 context,
                 PageRouteBuilder(
                   pageBuilder: (context, animation, secondaryAnimation) {
-                    return payment();
+                    return payment(categoryDoc: categoryDoc,categoryName: categoryName,selectedItemID: selectedItemID,
+                      totalprize: totalprize, quantity: quantity,
+                    );
                   },
                   transitionsBuilder:
                       (context, animation, secondaryAnimation, child) {

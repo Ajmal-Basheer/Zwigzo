@@ -15,6 +15,7 @@ class BuyNow extends StatefulWidget {
   final String selectedItemID;
   final String categoryName;
   double itemvalue;
+
   BuyNow({required this.categoryDoc, required this.selectedItemID, required this.categoryName, required this.itemvalue});
   @override
   BuyNowState createState() => BuyNowState(
@@ -34,7 +35,6 @@ class BuyNowState extends State<BuyNow> {
   final String categoryName;
   double itemvalue;
   // Store the selected item ID
-
   BuyNowState({required this.categoryDoc, required this.selectedItemID, required this.categoryName, required this.itemvalue});
 
   @override
@@ -299,6 +299,15 @@ class BuyNowState extends State<BuyNow> {
                                           fontWeight: FontWeight.bold,
                                           color: primaryColor),
                                     ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: Text(
+                                       '/ one',
+                                        style: GoogleFonts.notoSans(
+                                            fontSize: 15,
+                                            color: Colors.black54),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ],
@@ -367,7 +376,7 @@ class BuyNowState extends State<BuyNow> {
                     Navigator.push(context,  PageRouteBuilder(
                       pageBuilder: (context, animation, secondaryAnimation) {
                         return address(categoryDoc:categoryDoc, selectedItemID: selectedItemID,
-                          categoryName: categoryName, totalprize: totalAmount,);
+                          categoryName: categoryName, totalprize: totalAmount,quantity:dropselectedValue);
                       },
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) {

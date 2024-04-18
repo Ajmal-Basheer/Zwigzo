@@ -9,13 +9,46 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class payment extends StatefulWidget {
+  final String categoryDoc;
+  final String selectedItemID;
+  final String categoryName;
+  double? totalprize;
+  int ? quantity;
+  payment(
+      {required this.categoryDoc,
+        required this.selectedItemID,
+        required this.categoryName,
+        required this.totalprize,
+        required this.quantity,
+      });
+
   @override
-  State<StatefulWidget> createState()=>paymentState();
+   paymentState createState()=>paymentState(
+    categoryName: categoryName,
+    categoryDoc: categoryDoc,
+    selectedItemID: selectedItemID,
+    totalprize: totalprize,
+    quantity : quantity,
+  );
 }
 class paymentState extends State {
   int selectedValue = 1;
   Razorpay? _razorpay;
   bool isCreating = false;
+  late String _paymentmethod;
+  final String categoryDoc;
+  final String selectedItemID;
+  final String categoryName;
+  double? totalprize;
+  int? quantity;
+
+  paymentState(
+      {required this.categoryDoc,
+        required this.selectedItemID,
+        required this.categoryName,
+        required this.totalprize,
+        required this.quantity,
+      });
 
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
@@ -284,9 +317,17 @@ class paymentState extends State {
               ),
               onPressed: (){
                 if (selectedValue != 2){
+                  setState(() {
+                    _paymentmethod = 'Cash On Delivery';
+                  });
                   Navigator.push(context,  PageRouteBuilder(
                     pageBuilder: (context, animation, secondaryAnimation) {
-                      return placeorder();
+                      return placeorder(categoryDoc: categoryDoc,
+                        selectedItemID: selectedItemID,
+                        categoryName: categoryName,
+                        totalprize: totalprize,
+                        quantity: quantity,
+                        paymentMethod: _paymentmethod,);
                     },
                     transitionsBuilder:
                         (context, animation, secondaryAnimation, child) {
@@ -305,6 +346,9 @@ class paymentState extends State {
                   ),
                   );
                 }else{
+                  setState(() {
+                    _paymentmethod = 'Online Payment';
+                  });
                  makePayment;
                 }
               },

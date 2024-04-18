@@ -68,20 +68,14 @@ class userProfileState extends State {
                       child: SingleChildScrollView(
                         child:StreamBuilder(
                             stream: users.doc(_user!.uid).snapshots(),
-                            builder: (context, AsyncSnapshot<DocumentSnapshot<Object?>> snapshot) {
+                            builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.waiting) {
-                                return CircularProgressIndicator();
-                              } else if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
-                              } else if (!snapshot.hasData || snapshot.data == null) {
-                                return Text('No data available');
+                                return Center(child: CircularProgressIndicator());
                               }
-
-                              Map<String, dynamic>? userData = snapshot.data!.data() as Map<String, dynamic>?;
-
-                              if (userData == null) {
-                                return Text('No data available');
+                              if (!snapshot.hasData || snapshot.data == null) {
+                                print('No user data found.');
                               }
+                              final userData = snapshot.data!.data() as Map<String, dynamic>;
                               return Column(
                                 children: [
                                   Padding(

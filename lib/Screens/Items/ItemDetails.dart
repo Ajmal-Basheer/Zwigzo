@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:foodapp/Screens/Items/BuyNow.dart';
 import 'package:foodapp/Screens/Items/Cart.dart';
 import 'package:foodapp/config/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,25 +12,28 @@ import '../../config/noItemFound.dart';
 
 class itemDetails extends StatefulWidget {
   final String categoryDoc;
-  final String selectedItemID; // New parameter to store the selected item ID
-  final String categoryName; // New parameter to store the selected item ID
+  final String selectedItemID;
+  final String categoryName;
+  double itemvalue;
 
-  itemDetails({required this.categoryDoc, required this.selectedItemID, required this.categoryName});
+  itemDetails({required this.categoryDoc, required this.selectedItemID, required this.categoryName,required this.itemvalue});
 
   @override
   State<StatefulWidget> createState() => ItemDetailsState(
     categoryDoc: categoryDoc,
     selectedItemID: selectedItemID,
-    categoryName: categoryName, // Pass the selected item ID to the state
+    categoryName: categoryName,
+    itemvalue : itemvalue,
   );
 }
 
 class ItemDetailsState extends State<itemDetails> {
   final String categoryDoc;
   final String selectedItemID;
-  final String categoryName; // Store the selected item ID
+  final String categoryName;
+  double itemvalue;
 
-  ItemDetailsState({required this.categoryDoc, required this.selectedItemID, required this.categoryName});
+  ItemDetailsState({required this.categoryDoc, required this.selectedItemID, required this.categoryName , required this.itemvalue});
 
   @override
   Widget build(BuildContext context) {
@@ -174,7 +178,7 @@ class ItemDetailsState extends State<itemDetails> {
                                     context,
                                     PageRouteBuilder(
                                       pageBuilder: (context, animation, secondaryAnimation) {
-                                        return cart();
+                                        return BuyNow(categoryDoc: categoryDoc,categoryName: categoryName, selectedItemID: selectedItemID,itemvalue : itemvalue);
                                       },
                                       transitionsBuilder:
                                           (context, animation, secondaryAnimation, child) {
@@ -193,7 +197,7 @@ class ItemDetailsState extends State<itemDetails> {
                                   );
                                 },
                                 child: Text(
-                                  'Add to Cart',
+                                  'Buy Now',
                                   style: GoogleFonts.heebo(
                                     color: Colors.white,
                                     fontSize: 16,

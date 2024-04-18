@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodapp/Screens/Profile/Profile.dart';
@@ -11,7 +12,16 @@ class editProfile extends StatefulWidget {
 }
 
 class editProfileState extends State {
-  final CollectionReference users = FirebaseFirestore.instance.collection('users');
+  final CollectionReference users =
+  FirebaseFirestore.instance.collection('users');
+  late User? _user;
+
+  @override
+  void initState() {
+    super.initState();
+    _user = FirebaseAuth.instance.currentUser;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,26 +73,20 @@ class editProfileState extends State {
                             children: [
                               Expanded(
                                 child: StreamBuilder(
-                                  stream: users.snapshots(),
-                                  builder: (context,snapshot) {
-                                    List<QueryDocumentSnapshot<
-                                        Object?>> documents = snapshot.data!
-                                        .docs;
-                                    if (snapshot.connectionState == ConnectionState.waiting) {
-                                      return CircularProgressIndicator();
-                                    }
-                                    if (snapshot.hasError) {
-                                      return Text('Error: ${snapshot.error}');
-                                    }
-                                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                                      return Text('No data available');
-                                    }
-                                    QueryDocumentSnapshot<Object?> document = documents.last;
-                                    return ListView(
+                                  stream:  users.doc(_user!.uid).snapshots(),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState == ConnectionState.waiting) {
+                                        return Center(child: CircularProgressIndicator());
+                                      }
+                                      if (!snapshot.hasData || snapshot.data == null) {
+                                        print('No user data found.');
+                                      }
+                                      final userData = snapshot.data!.data() as Map<String, dynamic>;
+                                      return ListView(
                                       children: [
                                         TextField(
                                           decoration: InputDecoration(
-                                            hintText: document['username'],
+                                            hintText: userData['username'],
                                             hintStyle: TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black),
@@ -94,7 +98,7 @@ class editProfileState extends State {
                                         ),
                                         TextField(
                                           decoration: InputDecoration(
-                                            hintText: document['email'],
+                                            hintText: userData['email'],
                                             hintStyle: TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black),
@@ -106,7 +110,7 @@ class editProfileState extends State {
                                         ),
                                         TextField(
                                           decoration: InputDecoration(
-                                            hintText: document['phoneNumber'],
+                                            hintText: userData['phoneNumber'],
                                             hintStyle: TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black),
@@ -118,7 +122,7 @@ class editProfileState extends State {
                                         ),
                                         TextField(
                                           decoration: InputDecoration(
-                                            hintText: document['pinNumber'],
+                                            hintText: userData['pinNumber'],
                                             hintStyle: TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black),
@@ -130,7 +134,7 @@ class editProfileState extends State {
                                         ),
                                         TextField(
                                           decoration: InputDecoration(
-                                            hintText: document['address'],
+                                            hintText: userData['address'],
                                             hintStyle: TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black),
@@ -142,7 +146,7 @@ class editProfileState extends State {
                                         ),
                                         TextField(
                                           decoration: InputDecoration(
-                                            hintText: document['district'],
+                                            hintText: userData['district'],
                                             hintStyle: TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.black),

@@ -12,19 +12,38 @@ import 'package:foodapp/config/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class drawer extends StatefulWidget {
-
+  final User user;
+  drawer({required this.user});
   @override
-  State<StatefulWidget> createState() => drawerState();
+  drawerState createState() => drawerState();
 }
-class drawerState extends State {
-  late User? _user;
-  final CollectionReference users = FirebaseFirestore.instance.collection('users');
+class drawerState extends State<drawer> {
+  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Map<String, dynamic>? _userData;
 
   @override
   void initState() {
     super.initState();
-    _user = FirebaseAuth.instance.currentUser;
+    _fetchUserData();
   }
+
+  void _fetchUserData() async {
+    try {
+      DocumentSnapshot userData = await _firestore.collection('users').doc(widget.user.uid).get();
+      if (userData.exists && userData.data() != null) {
+        setState(() {
+          _userData = userData.data() as Map<String, dynamic>;
+        });
+      } else {
+        // Handle case where user data doesn't exist or is null
+        print('User data does not exist or is null.');
+      }
+    } catch (e) {
+      print('Error fetching user data: $e');
+    }
+  }
+
+
   Future<void> _logout() async {
     try {
       await FirebaseAuth.instance.signOut();
@@ -46,33 +65,22 @@ class drawerState extends State {
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.width / 2.2,
             color: primaryColor,
-            child: StreamBuilder(
-              stream: users.doc(_user!.uid).snapshots(),
-              builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  print('Error: ${snapshot.error}');
-                  return Text('Something went wrong');
-                }
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                }
-
-                if (!snapshot.hasData || !snapshot.data!.exists) {
-                  print('No data available');
-                  return Text('No data available');
-                }
-
-                Map<String, dynamic> userData = snapshot.data!.data() as Map<String, dynamic>;
-
-                return Column(
+            child: _userData == null
+                ? Center(child: CircularProgressIndicator())
+                : SingleChildScrollView(
+        padding: EdgeInsets.all(20.0),
+              child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Container(
+                      height: 80,
+                      child: Image.asset('assets/Zwigzo_logo.png'),
+                    ),
                     Padding(
-                      padding: EdgeInsets.only(left: 20, top: 5),
+                      padding: EdgeInsets.only(left: 10),
                       child: Text(
-                        userData['username'],
+                        '${_userData!['username']}',
                         style: GoogleFonts.notoSansAdlam(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -81,9 +89,9 @@ class drawerState extends State {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 20, top: 5),
+                      padding: EdgeInsets.only(left: 10,),
                       child: Text(
-                        userData['phoneNumber'],
+                        '${_userData!['phoneNumber']}',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14,
@@ -91,8 +99,7 @@ class drawerState extends State {
                      ),
                    ),
                  ],
-               );
-             },
+               ),
          ),
          ),
          Padding(

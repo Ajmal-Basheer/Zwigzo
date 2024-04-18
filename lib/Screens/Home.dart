@@ -27,27 +27,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/painting.dart';
 
 class HomeScreen extends StatefulWidget {
+  final User user;
+  HomeScreen({required this.user});
   @override
-  State<StatefulWidget> createState() => HomeScreenState();
+  HomeScreenState createState() => HomeScreenState();
 }
 
 class HomeScreenState extends State {
   SharedPreferences? logindata;
-  final CollectionReference users = FirebaseFirestore.instance.collection('users');
-  User ? loggedInUser;
-
-  @override
-  void initState() {
-    super.initState();
-    // Retrieve the currently logged-in user
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      setState(() {
-        loggedInUser = user;
-      });
-    });
-  }
-
-
+  User? currentUser = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +115,7 @@ class HomeScreenState extends State {
           ),
         ],
       ),
-      drawer: drawer(),
+      drawer: drawer(user: currentUser!),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Column(

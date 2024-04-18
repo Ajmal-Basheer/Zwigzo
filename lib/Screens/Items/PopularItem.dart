@@ -251,6 +251,7 @@ class popularItemsState extends State {
                                     categoryDoc: '',
                                     selectedItemID: '',
                                     categoryName: '',
+                                    itemvalue: 0,
                                   );
                                 },
                                 transitionsBuilder: (context, animation,

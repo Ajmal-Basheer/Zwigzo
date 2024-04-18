@@ -227,7 +227,8 @@ class _ItemsListState extends State<ItemsList> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) => itemDetails(categoryDoc:categoryDoc,
-                                selectedItemID: document.id,categoryName : categoryName)),
+                                selectedItemID: document.id,categoryName : categoryName,itemvalue:rupees,
+                            )),
                           );
                         },
                       );

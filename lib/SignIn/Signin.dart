@@ -16,14 +16,11 @@ class Signin extends StatefulWidget {
 }
 
 class SigninState_ extends State {
-  late final TextEditingController _usercontroller;
-  late final TextEditingController _passcontroller;
-
-
+  final TextEditingController _usercontroller = TextEditingController();
+  final TextEditingController _passcontroller = TextEditingController();
+  bool _isLoading = false;
   late SharedPreferences logindata;
-
   bool passVisible = true;
-
   bool usernameValidate_ = false;
   bool passwordValidate_ = false;
 
@@ -59,62 +56,66 @@ class SigninState_ extends State {
     });
   }
 
-  @override
-  void initState() {
-    _passcontroller = TextEditingController();
-    _usercontroller = TextEditingController();
-    super.initState();
-    logindatacheck();
-  }
-
-  void logindatacheck() async {
-    logindata = await SharedPreferences.getInstance();
-  }
-
-  String _Useremail = '';
-  int _success = 1;
-
   Future<void> _signin() async {
+    setState(() {
+    _isLoading = true;
+  });
     try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-          email: _usercontroller.text, password: _passcontroller.text);
-      if (userCredential != null) {
-        setState(() {
-          _success = 2;
-          _Useremail = userCredential.user!.email!;
-           logindata.setString('useremail', _Useremail);
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) {
-                return HomeScreen();
-              },
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                const begin = Offset(-1.0, 0.0);
-                const end = Offset.zero;
-                const curve = Curves.easeInOut;
+    UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+      email: _usercontroller.text.trim(),
+      password: _passcontroller.text,
+    );
+    if (userCredential.user != null) {
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return HomeScreen( user: userCredential.user!);
+          },
+          transitionsBuilder:
+              (context, animation, secondaryAnimation, child) {
+            const begin = Offset(-1.0, 0.0);
+            const end = Offset.zero;
+            const curve = Curves.easeInOut;
 
-                var tween = Tween(begin: begin, end: end)
-                    .chain(CurveTween(curve: curve));
+            var tween = Tween(begin: begin, end: end)
+                .chain(CurveTween(curve: curve));
 
-                var offsetAnimation = animation.drive(tween);
+            var offsetAnimation = animation.drive(tween);
 
-                return SlideTransition(position: offsetAnimation, child: child);
-              },
-              transitionDuration: Duration(milliseconds: 400),
-            ),
-          );
-        });
-      }
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        _success = 3;
-        usernameValidate_ = true;
-        passwordValidate_ = true;
-      });
+            return SlideTransition(position: offsetAnimation, child: child);
+          },
+          transitionDuration: Duration(milliseconds: 400),
+        ),
+      );
     }
+      } catch (e) {
+      print('Error logging in: $e');
+      // Handle login errors here
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to log in. Please check your credentials and try again.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
+
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
   Future<UserCredential?> _handleSignIn() async {
@@ -308,7 +309,7 @@ class SigninState_ extends State {
                                 onTap: ()async{
                                   UserCredential? userCredential = await _handleSignIn();
                                   if (userCredential != null ){
-                                   Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen())) ;
+                                   Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen(user: userCredential.user!))) ;
                                   }
                                 },
                                 child: Container(

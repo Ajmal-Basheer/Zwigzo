@@ -99,22 +99,22 @@ class deliveryHomeState extends State {
                child: ListTile(title: Text('Profile',style: TextStyle(fontWeight: FontWeight.w600),),
                  leading: Icon(Icons.person,color: Colors.black54,),),
                onTap: (){
-                 Navigator.push(context,  PageRouteBuilder(
-                   pageBuilder: (context, animation, secondaryAnimation) {
-                     return userProfile();
-                   },
-                   transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                     const curve = Curves.easeInOut;
-
-                     var scaleTween = Tween(begin: 0.0, end: 1.0).chain(CurveTween(curve: curve));
-
-                     var scaleAnimation = animation.drive(scaleTween);
-
-                     return ScaleTransition(scale: scaleAnimation, child: child);
-                   },
-                   transitionDuration: Duration(milliseconds: 400),
-                 ),
-                 );
+                 // Navigator.push(context,  PageRouteBuilder(
+                 //   pageBuilder: (context, animation, secondaryAnimation) {
+                 //     return userProfile();
+                 //   },
+                 //   transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                 //     const curve = Curves.easeInOut;
+                 //
+                 //     var scaleTween = Tween(begin: 0.0, end: 1.0).chain(CurveTween(curve: curve));
+                 //
+                 //     var scaleAnimation = animation.drive(scaleTween);
+                 //
+                 //     return ScaleTransition(scale: scaleAnimation, child: child);
+                 //   },
+                 //   transitionDuration: Duration(milliseconds: 400),
+                 // ),
+                 // );
                },
              ),
            ),

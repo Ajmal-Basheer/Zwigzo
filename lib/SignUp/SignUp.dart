@@ -8,6 +8,7 @@ import 'package:foodapp/config/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
+final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 class SignUp extends StatefulWidget {
   @override
@@ -18,14 +19,14 @@ class SignUpState extends State {
 
   PlatformFile ? pickedfile;
 
-  late final TextEditingController _nameController;
-  late final TextEditingController _PasswordController;
-  late final TextEditingController _ConfirmPasswordController;
-  late final TextEditingController _emailController;
-  late final TextEditingController _phoneController;
-  late final TextEditingController _addressController;
-  late final TextEditingController _pinController;
-  late final TextEditingController _districtController;
+   final TextEditingController _nameController = TextEditingController();
+   final TextEditingController _PasswordController = TextEditingController();
+   final TextEditingController _ConfirmPasswordController= TextEditingController();
+   final TextEditingController _emailController= TextEditingController();
+   final TextEditingController _phoneController= TextEditingController();
+   final TextEditingController _addressController= TextEditingController();
+   final TextEditingController _pinController= TextEditingController();
+   final TextEditingController _districtController= TextEditingController();
 
   bool _nameValidate = false;
   bool _passValidate = false;
@@ -39,19 +40,20 @@ class SignUpState extends State {
   bool _erroremail = false;
   bool _errorphone = false;
   bool _passwordcount = false;
+  bool _isLoading = false;
 
-  @override
-  void initState() {
-    _nameController = TextEditingController();
-    _phoneController = TextEditingController();
-    _emailController = TextEditingController();
-    _ConfirmPasswordController = TextEditingController();
-    _addressController = TextEditingController();
-    _PasswordController = TextEditingController();
-    _pinController = TextEditingController();
-    _districtController = TextEditingController();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   _nameController = TextEditingController();
+  //   _phoneController = TextEditingController();
+  //   _emailController = TextEditingController();
+  //   _ConfirmPasswordController = TextEditingController();
+  //   _addressController = TextEditingController();
+  //   _PasswordController = TextEditingController();
+  //   _pinController = TextEditingController();
+  //   _districtController = TextEditingController();
+  //   super.initState();
+  // }
 
   // Function to validate all fields
   bool validateFields() {
@@ -110,51 +112,110 @@ class SignUpState extends State {
     });
   }
 
-  Future<void> _addData()async{
-    try {
-      //Get Firestore instance
-      FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-      //Collection reference
-      CollectionReference users = firebaseFirestore.collection('users');
-      //add document with data
-      await users.add(
-          {
-            'username' : _nameController.text,
-            'password' : _PasswordController.text,
-            'email' : _emailController.text,
-            'phoneNumber' : _phoneController.text,
-            'address' : _addressController.text,
-            'pinNumber' : _pinController.text,
-            'district' : _districtController.text,
-            'addressTwo' : null,
-          }
-      );
-      print('data add Successfully');
-    }catch(e){
-      print('error adding data : $e');
-    }
-  }
-  late bool _success;
-  late String _userEmail;
+  Future<void> _signUp() async {
+    setState(() {
+      _isLoading = true;
+    });
 
-  Future<void> _register()async{
-    try
-    {
+    try {
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-          email: _emailController.text,
-          password: _PasswordController.text);
-      setState(() {
-        _success = true;
-        _userEmail = userCredential.user!.email!;
+        email: _emailController.text.trim(),
+        password: _PasswordController.text,
+      );
+
+      if (userCredential.user != null) {
+        // Store additional user details in Firestore
+        await _firestore.collection('users').doc(userCredential.user!.uid).set({
+          'username' : _nameController.text.trim(),
+          'password' : _PasswordController.text.trim(),
+          'email' : _emailController.text.trim(),
+          'phoneNumber' : _phoneController.text.trim(),
+          'address' : _addressController.text.trim(),
+          'pinNumber' : _pinController.text.trim(),
+          'district' : _districtController.text.trim(),
+          'addressTwo' : null,
+        });
+        _nameController.clear();
+        _PasswordController.clear();
+        _ConfirmPasswordController.clear();
         _emailController.clear();
-        _emailController.clear();
-      });
-    }on FirebaseAuthException catch(e){
-      setState(() {
-        _success = false;
-      });
+        _phoneController.clear();
+        _addressController.clear();
+        _pinController.clear();
+        _districtController.clear();
+      }
+    } catch (e) {
+      print('Error signing up: $e');
+      // Handle sign-up errors here
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to sign up. Please try again.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
+
+  // Future<void> _addData()async{
+  //   try {
+  //     //Get Firestore instance
+  //     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  //     //Collection reference
+  //     CollectionReference users = firebaseFirestore.collection('users');
+  //     //add document with data
+  //     await users.add(
+  //         {
+  //           'username' : _nameController.text,
+  //           'password' : _PasswordController.text,
+  //           'email' : _emailController.text,
+  //           'phoneNumber' : _phoneController.text,
+  //           'address' : _addressController.text,
+  //           'pinNumber' : _pinController.text,
+  //           'district' : _districtController.text,
+  //           'addressTwo' : null,
+  //         }
+  //     );
+  //     print('data add Successfully');
+  //   }catch(e){
+  //     print('error adding data : $e');
+  //   }
+  // }
+  // late bool _success;
+  // late String _userEmail;
+  //
+  // Future<void> _register()async{
+  //   try
+  //   {
+  //     UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+  //         email: _emailController.text,
+  //         password: _PasswordController.text);
+  //     setState(() {
+  //       _success = true;
+  //       _userEmail = userCredential.user!.email!;
+  //       _emailController.clear();
+  //       _emailController.clear();
+  //     });
+  //   }on FirebaseAuthException catch(e){
+  //     setState(() {
+  //       _success = false;
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -358,16 +419,7 @@ class SignUpState extends State {
                             onPressed: () async {
                               setState(() {
                                 if (validateFields()) {
-                                  _addData();
-                                  _register();
-                                  _districtController.clear();
-                                  _pinController.clear();
-                                  _addressController.clear();
-                                  _phoneController.clear();
-                                  _emailController.clear();
-                                  _ConfirmPasswordController.clear();
-                                  _PasswordController.clear();
-                                  _nameController.clear();
+                                  _signUp();
                                     Navigator.push(
                                       context,
                                       PageRouteBuilder(

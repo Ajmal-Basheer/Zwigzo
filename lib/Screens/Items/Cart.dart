@@ -273,22 +273,22 @@ class cartState extends State {
                           ),
                           TextButton(
                               onPressed: (){
-                                Navigator.push(context,  PageRouteBuilder(
-                                  pageBuilder: (context, animation, secondaryAnimation) {
-                                    return address();
-                                  },
-                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                    const curve = Curves.easeInOut;
-        
-                                    var scaleTween = Tween(begin: 0.0, end: 1.0).chain(CurveTween(curve: curve));
-        
-                                    var scaleAnimation = animation.drive(scaleTween);
-        
-                                    return ScaleTransition(scale: scaleAnimation, child: child);
-                                  },
-                                  transitionDuration: Duration(milliseconds: 400),
-                                ),
-                                );
+                                // Navigator.push(context,  PageRouteBuilder(
+                                //   pageBuilder: (context, animation, secondaryAnimation) {
+                                //     return address();
+                                //   },
+                                //   transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                //     const curve = Curves.easeInOut;
+                                //
+                                //     var scaleTween = Tween(begin: 0.0, end: 1.0).chain(CurveTween(curve: curve));
+                                //
+                                //     var scaleAnimation = animation.drive(scaleTween);
+                                //
+                                //     return ScaleTransition(scale: scaleAnimation, child: child);
+                                //   },
+                                //   transitionDuration: Duration(milliseconds: 400),
+                                // ),
+                                // );
                               },
                               child: Row(
                                 children: [
@@ -369,26 +369,26 @@ class cartState extends State {
                   SizedBox(width: 10,),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context,  PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) {
-                          return address();
-                        },
-                        transitionsBuilder:
-                            (context, animation, secondaryAnimation, child) {
-                          const begin = Offset(1.0, 0.0);
-                          const end = Offset.zero;
-                          const curve = Curves.easeInOut;
-
-                          var tween = Tween(begin: begin, end: end)
-                              .chain(CurveTween(curve: curve));
-
-                          var offsetAnimation = animation.drive(tween);
-
-                          return SlideTransition(position: offsetAnimation, child: child);
-                        },
-                        transitionDuration: Duration(milliseconds: 400),
-                      ),
-                      );
+                      // Navigator.push(context,  PageRouteBuilder(
+                      //   pageBuilder: (context, animation, secondaryAnimation) {
+                      //     return address();
+                      //   },
+                      //   transitionsBuilder:
+                      //       (context, animation, secondaryAnimation, child) {
+                      //     const begin = Offset(1.0, 0.0);
+                      //     const end = Offset.zero;
+                      //     const curve = Curves.easeInOut;
+                      //
+                      //     var tween = Tween(begin: begin, end: end)
+                      //         .chain(CurveTween(curve: curve));
+                      //
+                      //     var offsetAnimation = animation.drive(tween);
+                      //
+                      //     return SlideTransition(position: offsetAnimation, child: child);
+                      //   },
+                      //   transitionDuration: Duration(milliseconds: 400),
+                      // ),
+                      // );
                     },
                     child: Text('Place Order',
                         style: GoogleFonts.heebo(

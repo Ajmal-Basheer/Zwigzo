@@ -21,14 +21,12 @@ import 'package:foodapp/Screens/Sections/SearchCategory.dart';
 import 'package:foodapp/Screens/Sections/newest.dart';
 import 'package:foodapp/config/colors.dart';
 import 'package:foodapp/config/drawer.dart';
-import 'package:foodapp/test.dart';
+import 'package:foodapp/Test/test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/painting.dart';
 
 class HomeScreen extends StatefulWidget {
-  final User user;
-  HomeScreen({required this.user});
   @override
   HomeScreenState createState() => HomeScreenState();
 }

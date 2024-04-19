@@ -73,7 +73,7 @@ class SigninState_ extends State {
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) {
-              return HomeScreen(user: userCredential.user!);
+              return HomeScreen();
             },
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
@@ -376,9 +376,7 @@ class SigninState_ extends State {
                                             Navigator.push(context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        HomeScreen(
-                                                            user: userCredential
-                                                                .user!)));
+                                                        HomeScreen()));
                                           }
                                         },
                                         child: Container(

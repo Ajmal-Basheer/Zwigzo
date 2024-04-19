@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foodapp/Screens/Buy/failedOrder.dart';
 import 'package:foodapp/Screens/Buy/successOrder.dart';
 import 'package:foodapp/config/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -38,7 +39,6 @@ class placeorder extends StatefulWidget {
 }
 
 class placeorderState extends State {
-  Map<String, dynamic>? _userData;
   final CollectionReference users =
       FirebaseFirestore.instance.collection('users');
   late User? _user;
@@ -48,10 +48,23 @@ class placeorderState extends State {
     super.initState();
     _user = FirebaseAuth.instance.currentUser;
   }
-
   Future<void> addOrderDetails() async {
     CollectionReference<Map<String, dynamic>> itemsCollection =
     FirebaseFirestore.instance.collection('orders');
+
+    Stream<DocumentSnapshot<Map<String, dynamic>>> itemStream =
+    _fetchItemDetailsStream(selectedItemID);
+
+    // Wait for the item details snapshot
+    DocumentSnapshot<Map<String, dynamic>> itemSnapshot =
+    await itemStream.first;
+
+    if (!itemSnapshot.exists) {
+      print('Item data not found.');
+      return;
+    }
+
+    Map<String, dynamic> itemData = itemSnapshot.data()!;
     try {
       DocumentSnapshot<Object?> userSnapshot =
       await users.doc(_user!.uid).get();
@@ -60,15 +73,54 @@ class placeorderState extends State {
         return;
       }
       DocumentSnapshot userData = await users.doc(_user?.uid).get();
-      await itemsCollection.add({
+
+      // Generate a unique orderId
+      String orderId = itemsCollection.doc().id;
+
+      await itemsCollection.doc(orderId).set({
         'userId': _user!.uid,
         'userName': userData['username'],
+        'address': userData['address'],
+        'pinNumber': userData['pinNumber'],
+        'district': userData['district'],
+        'phoneNumber': userData['phoneNumber'],
+        'itemCategory': categoryName,
+        'itemName': itemData['itemName'],
+        'itemImagelink':itemData['itemImagelink'],
+        'rupees': totalprize,
+        'quantity': quantity,
+        'paymentmethod': paymentMethod,
+        'itemId': selectedItemID,
+        'categoryId': categoryDoc,
+        'OrderStatus':'Ordered',
       });
-      print('Data added successfully!');
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>SuccessPopUp()));
+      print('Data added successfully to orders!');
+      // Add the orderId to userOrders
+      await addOrderToUserOrders(orderId);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SuccessPopUp()),
+      );
     } catch (e) {
       print('Error adding data: $e');
+      Navigator.push(context, MaterialPageRoute(builder: (context) => failedPop()));
+    }
+  }
 
+  Future<void> addOrderToUserOrders(String orderId) async {
+    try {
+      CollectionReference<Map<String, dynamic>> userOrdersCollection =
+      FirebaseFirestore.instance.collection('users')
+          .doc(_user!.uid)
+          .collection('userOrders');
+
+      await userOrdersCollection.add({
+        'orderId': orderId,
+      });
+
+      print('Order added to userOrders successfully!');
+    } catch (e) {
+      print('Error adding order to userOrders: $e');
     }
   }
 

@@ -178,29 +178,31 @@ class PopularSecState extends State {
                   ),
                 ]),
                 onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   PageRouteBuilder(
-                  //     pageBuilder: (context, animation, secondaryAnimation) {
-                  //       return itemDetails(
-                  //         categoryDoc: document.id, selectedItemID: '', categoryName: '', // Fix selected item ID
-                  //       );
-                  //     },
-                  //     transitionsBuilder:
-                  //         (context, animation, secondaryAnimation, child) {
-                  //       const curve = Curves.easeInOut;
-                  //
-                  //       var scaleTween = Tween(begin: 0.0, end: 1.0)
-                  //           .chain(CurveTween(curve: curve));
-                  //
-                  //       var scaleAnimation = animation.drive(scaleTween);
-                  //
-                  //       return ScaleTransition(
-                  //           scale: scaleAnimation, child: child);
-                  //     },
-                  //     transitionDuration: Duration(milliseconds: 400),
-                  //   ),
-                  // );
+                  double rupees =
+                      double.tryParse(data['rupees'].toString()) ?? 0.0;
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation, secondaryAnimation) {
+                        return itemDetails(
+                          categoryDoc: 'FILN0PFsHzgRN7XulAbX', selectedItemID: document.id, categoryName: 'Burger', itemvalue: rupees,
+                        );
+                      },
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        const curve = Curves.easeInOut;
+
+                        var scaleTween = Tween(begin: 0.0, end: 1.0)
+                            .chain(CurveTween(curve: curve));
+
+                        var scaleAnimation = animation.drive(scaleTween);
+
+                        return ScaleTransition(
+                            scale: scaleAnimation, child: child);
+                      },
+                      transitionDuration: Duration(milliseconds: 400),
+                    ),
+                  );
                 },
               );
             }).toList(),
@@ -209,4 +211,5 @@ class PopularSecState extends State {
       ),
     );
   }
+
 }

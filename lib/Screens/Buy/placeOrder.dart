@@ -97,6 +97,12 @@ class placeorderState extends State {
       print('Data added successfully to orders!');
       // Add the orderId to userOrders
       await addOrderToUserOrders(orderId);
+      await FirebaseFirestore.instance
+          .collection('ActiveOrders')
+          .doc(orderId)
+          .set({
+        'orderId': orderId,
+      });
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => SuccessPopUp()),

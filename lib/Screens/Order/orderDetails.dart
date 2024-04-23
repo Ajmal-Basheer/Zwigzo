@@ -209,7 +209,7 @@ class orderDetailsState extends State<orderDetails> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                          child: TimerPage()
+                          child: orderData['OrderStatus'] == 'Delivering Soon' ? TimerPage() : SizedBox(),
                         ),
                         timeLine(isFirst: true,
                             isLast: false,

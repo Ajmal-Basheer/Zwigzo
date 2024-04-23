@@ -62,7 +62,7 @@ class onboardstate extends State<onBoarding> {
                         Text(
                           contents[i].description,
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.w400),
+                              fontSize: 18, fontWeight: FontWeight.w400),
                           textAlign: TextAlign.center,
                         )
                       ],

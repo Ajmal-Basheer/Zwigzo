@@ -5,10 +5,12 @@ import 'package:foodapp/Admin/Order/newOrder.dart';
 import 'package:foodapp/config/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class OrderManageHome extends StatefulWidget {  @override
+class OrderManageHome extends StatefulWidget {
+  @override
   State<StatefulWidget> createState() => OrderManageHomeState();
 }
-class OrderManageHomeState extends State {  @override
+class OrderManageHomeState extends State {
+  @override
   Widget build(BuildContext context) {
   return DefaultTabController(
       length: 2,

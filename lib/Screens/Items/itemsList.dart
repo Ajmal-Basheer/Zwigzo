@@ -109,7 +109,6 @@ class _ItemsListState extends State<ItemsList> {
                       double rating = double.tryParse(ratingValue) ?? 0;
                       double rupees =
                           double.tryParse(data['rupees'].toString()) ?? 0.0;
-
                       return GestureDetector(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,

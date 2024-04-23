@@ -22,9 +22,13 @@ class MyOrderState extends State {
     super.initState();
     _user = FirebaseAuth.instance.currentUser;
   }
+
   Future<void> cancelOrder(String orderId) async {
     try {
-      await FirebaseFirestore.instance.collection('orders').doc(orderId).update({
+      await FirebaseFirestore.instance
+          .collection('orders')
+          .doc(orderId)
+          .update({
         'OrderStatus': 'Cancelled',
       });
       print('Order status updated successfully.');
@@ -81,7 +85,7 @@ class MyOrderState extends State {
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
                   Map<String, dynamic> orderId =
-                  snapshot.data!.docs[index].data()!;
+                      snapshot.data!.docs[index].data()!;
                   return Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
@@ -99,16 +103,18 @@ class MyOrderState extends State {
                               ],
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(10)),
-                          child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                          child: StreamBuilder<
+                                  DocumentSnapshot<Map<String, dynamic>>>(
                               stream: FirebaseFirestore.instance
                                   .collection('orders')
-                                  .doc(orderId['orderId']) // Reference to the specific order document
+                                  .doc(orderId[
+                                      'orderId']) // Reference to the specific order document
                                   .snapshots(),
                               builder: (BuildContext context,
                                   AsyncSnapshot<
-                                      DocumentSnapshot<
-                                          Map<String, dynamic>>>
-                                  snapshot) {
+                                          DocumentSnapshot<
+                                              Map<String, dynamic>>>
+                                      snapshot) {
                                 if (snapshot.hasError) {
                                   return Center(
                                       child: Text('Error: ${snapshot.error}'));
@@ -128,16 +134,17 @@ class MyOrderState extends State {
 
                                 // Access the order data
                                 Map<String, dynamic> orderData =
-                                snapshot.data!.data()!;
+                                    snapshot.data!.data()!;
 
                                 // Display order details
                                 return Row(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.all(10.0),
-                                        child: Image.network(orderData['itemImagelink'],
+                                        child: Image.network(
+                                          orderData['itemImagelink'],
                                           height: 90,
                                         ),
                                       ),
@@ -155,29 +162,50 @@ class MyOrderState extends State {
                                               "Quantity: ${orderData['quantity'].toString()}",
                                               style: GoogleFonts.poppins(),
                                             ),
-                                            if (orderData['OrderStatus'] == 'Cancelled') ...[
+                                            if (orderData['OrderStatus'] ==
+                                                'Cancelled')
                                               Container(
                                                 padding: EdgeInsets.fromLTRB(
                                                     10, 5, 10, 5),
                                                 decoration: BoxDecoration(
                                                   color: Colors.red,
                                                   borderRadius:
-                                                  BorderRadius.circular(
-                                                      20),
+                                                      BorderRadius.circular(20),
                                                 ),
-                                                child: Text('Cancelled',style: TextStyle(color: Colors.white),),
+                                                child: Text(
+                                                  'Cancelled',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
                                               )
-                                            ] else ...[
+                                            else if (orderData['OrderStatus'] ==
+                                                'Delivered')
+                                              Container(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    10, 5, 10, 5),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.green,
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                child: Text(
+                                                  orderData['OrderStatus'],
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              )
+                                            else
                                               Row(
                                                 children: [
                                                   Container(
-                                                    padding: EdgeInsets.fromLTRB(
-                                                        10, 5, 10, 5),
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            10, 5, 10, 5),
                                                     decoration: BoxDecoration(
                                                       color: Colors.green,
                                                       borderRadius:
-                                                      BorderRadius.circular(
-                                                          20),
+                                                          BorderRadius.circular(
+                                                              20),
                                                     ),
                                                     child: Text(
                                                       orderData['OrderStatus'],
@@ -187,39 +215,51 @@ class MyOrderState extends State {
                                                     ),
                                                   ),
                                                   TextButton(
-                                                      onPressed: () {
-                                                        showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext context) {
-                                                            return AlertDialog(
-                                                              title: Text('Cancel'),
-                                                              content: Text('Are you sure you want to Cancel?'),
-                                                              actions: <Widget>[
-                                                                TextButton(
-                                                                  onPressed: () {
-                                                                    Navigator.of(context).pop();
-                                                                  },
-                                                                  child: Text('No'),
-                                                                ),
-                                                                TextButton(
-                                                                  onPressed: () {
-                                                                    cancelOrder(orderId['orderId']);
-                                                                  },
-                                                                  child: Text('Yes'),
-                                                                ),
-                                                              ],
-                                                            );
-                                                          },
-                                                        );
-                                                      },
-                                                      child: Text(
-                                                        'Cancel',
-                                                        style: TextStyle(
-                                                            color: Colors.red),
-                                                      ))
+                                                    onPressed: () {
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext
+                                                            context) {
+                                                          return AlertDialog(
+                                                            title:
+                                                                Text('Cancel'),
+                                                            content: Text(
+                                                                'Are you sure you want to Cancel?'),
+                                                            actions: <Widget>[
+                                                              TextButton(
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                },
+                                                                child:
+                                                                    Text('No'),
+                                                              ),
+                                                              TextButton(
+                                                                onPressed: () {
+                                                                  cancelOrder(
+                                                                      orderId[
+                                                                          'orderId']);
+                                                                  Navigator.of(
+                                                                      context)
+                                                                      .pop();
+                                                                },
+                                                                child:
+                                                                    Text('Yes'),
+                                                              ),
+                                                            ],
+                                                          );
+                                                        },
+                                                      );
+                                                    },
+                                                    child: Text(
+                                                      'Cancel',
+                                                      style: TextStyle(
+                                                          color: Colors.red),
+                                                    ),
+                                                  ),
                                                 ],
-                                              ),
-                                            ],
+                                              )
                                           ],
                                         ),
                                       ),
@@ -231,33 +271,35 @@ class MyOrderState extends State {
                                                 pageBuilder: (context,
                                                     animation,
                                                     secondaryAnimation) {
-                                                  return orderDetails(orderId: orderId['orderId'],);
+                                                  return orderDetails(
+                                                    orderId: orderId['orderId'],
+                                                  );
                                                 },
                                                 transitionsBuilder: (context,
                                                     animation,
                                                     secondaryAnimation,
                                                     child) {
                                                   const begin =
-                                                  Offset(1.0, 0.0);
+                                                      Offset(1.0, 0.0);
                                                   const end = Offset.zero;
                                                   const curve =
                                                       Curves.easeInOut;
 
                                                   var tween = Tween(
-                                                      begin: begin,
-                                                      end: end)
+                                                          begin: begin,
+                                                          end: end)
                                                       .chain(CurveTween(
-                                                      curve: curve));
+                                                          curve: curve));
 
                                                   var offsetAnimation =
-                                                  animation.drive(tween);
+                                                      animation.drive(tween);
 
                                                   return SlideTransition(
                                                       position: offsetAnimation,
                                                       child: child);
                                                 },
                                                 transitionDuration:
-                                                Duration(milliseconds: 400),
+                                                    Duration(milliseconds: 400),
                                               ),
                                             );
                                           },
@@ -277,25 +319,28 @@ class MyOrderState extends State {
         ),
         child: ElevatedButton(
           onPressed: () {
-            Navigator.push(context,  PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) {
-                return HomeScreen();
-              },
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                const begin = Offset(0.0, -1.0);
-                const end = Offset.zero;
-                const curve = Curves.easeInOut;
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return HomeScreen();
+                },
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  const begin = Offset(0.0, -1.0);
+                  const end = Offset.zero;
+                  const curve = Curves.easeInOut;
 
-                var tween = Tween(begin: begin, end: end)
-                    .chain(CurveTween(curve: curve));
+                  var tween = Tween(begin: begin, end: end)
+                      .chain(CurveTween(curve: curve));
 
-                var offsetAnimation = animation.drive(tween);
+                  var offsetAnimation = animation.drive(tween);
 
-                return SlideTransition(position: offsetAnimation, child: child);
-              },
-              transitionDuration: Duration(milliseconds: 400),
-            ),
+                  return SlideTransition(
+                      position: offsetAnimation, child: child);
+                },
+                transitionDuration: Duration(milliseconds: 400),
+              ),
             );
           },
           child: Text('Continue Shopping',

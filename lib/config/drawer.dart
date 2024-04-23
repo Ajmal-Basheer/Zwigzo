@@ -35,7 +35,6 @@ class drawerState extends State<drawer> {
           _userData = userData.data() as Map<String, dynamic>;
         });
       } else {
-        // Handle case where user data doesn't exist or is null
         print('User data does not exist or is null.');
       }
     } catch (e) {
@@ -50,7 +49,6 @@ class drawerState extends State<drawer> {
       Navigator.of(context).popUntil((route) => route.isFirst);
     } catch (e) {
       print("Error logging out: $e");
-      // Handle error logging out user
     }
   }
 
@@ -284,21 +282,6 @@ class drawerState extends State<drawer> {
              onTap: () {
                Navigator.push(context,
                    MaterialPageRoute(builder: (context) => adminHome()));
-             }),
-         GestureDetector(
-             child: ListTile(
-               title: Text(
-                 'Delivery partner',
-                 style: TextStyle(fontWeight: FontWeight.w600),
-               ),
-               leading: Icon(
-                 Icons.exit_to_app,
-                 color: Colors.black54,
-               ),
-             ),
-             onTap: () {
-               Navigator.push(context,
-                   MaterialPageRoute(builder: (context) => deliveryHome()));
              }),
          Container(
            height: 1,

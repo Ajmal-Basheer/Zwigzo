@@ -8,24 +8,18 @@ class Unboardcontent{
 
 List<Unboardcontent> contents=[
   Unboardcontent(
-      title: 'Welcome',
+      title: 'Welcome to Zwigzo',
       image: 'assets/firstAnimation.json',
-      description: 'Cosmetics are pharmaceutical products that are used for '
-          'improving skin appearance and body odor. These products are available '
-          'in various forms, ranging from lotions, creams, powders, and so forth'
+      description: 'Our Trust Make Your Taste'
   ),
   Unboardcontent(
-      title: 'Welcome',
+      title: 'Welcome to Zwigzo',
       image: 'assets/SecondAnimation.json',
-      description: 'Cosmetics are pharmaceutical products that are used for '
-          'improving skin appearance and body odor. These products are available '
-          'in various forms, ranging from lotions, creams, powders, and so forth'
+      description: 'Fast Delivery'
   ),
   Unboardcontent(
-      title: 'Welcome',
+      title: 'Welcome to Zwigzo',
       image: 'assets/ThirdAnimation.json',
-      description: 'Cosmetics are pharmaceutical products that are used for '
-          'improving skin appearance and body odor. These products are available '
-          'in various forms, ranging from lotions, creams, powders, and so forth'
+      description: "Let's Go..."
   )
 ];

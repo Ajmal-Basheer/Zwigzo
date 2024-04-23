@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodapp/Admin/AdminHome.dart';
-import 'package:foodapp/DeliveryPartner/partnerSignIn.dart';
 import 'package:foodapp/Screens/Home.dart';
 import 'package:foodapp/SignUp/SignUp.dart';
 import 'package:foodapp/config/colors.dart';
@@ -16,7 +15,7 @@ import '../DeliveryPartner/DeliveryHome.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
-class Signin extends StatefulWidget {
+class PartnerSignin extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => SigninState_();
 }
@@ -30,6 +29,7 @@ class SigninState_ extends State {
   bool passVisible = true;
   bool usernameValidate_ = false;
   bool passwordValidate_ = false;
+  User? currentUser = FirebaseAuth.instance.currentUser;
 
   bool validateField() {
     setState(() {
@@ -63,26 +63,11 @@ class SigninState_ extends State {
     });
   }
 
-  Future<void> _signin() async {
+  Future<void> _signin(User user) async {
     setState(() {
       _isLoading = true;
     });
     try {
-      if (_usercontroller.text.trim() == 'partner@zwigzo.com' &&
-          _passcontroller.text == 'partner@1') {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => PartnerSignin()),
-        );
-      }
-      else if (_usercontroller.text.trim() == 'admin@gmail.com' &&
-        _passcontroller.text == 'admin@1') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => adminHome()),
-      );
-    }
-      else {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: _usercontroller.text.trim(),
         password: _passcontroller.text,
@@ -92,7 +77,7 @@ class SigninState_ extends State {
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) {
-              return HomeScreen();
+              return deliveryHome(user: user);
             },
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
@@ -111,7 +96,6 @@ class SigninState_ extends State {
           ),
         );
       }
-    }
     } catch (e) {
       print('Error logging in: $e');
       // Handle login errors here
@@ -185,7 +169,6 @@ class SigninState_ extends State {
                                 bottomLeft: Radius.circular(30)),
                             gradient: LinearGradient(
                               colors: [Color(0xffffd755), primaryColor],
-                              // Set your desired gradient colors
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                             ),
@@ -202,7 +185,7 @@ class SigninState_ extends State {
                               height: MediaQuery
                                   .of(context)
                                   .size
-                                  .height / 1.9,
+                                  .height / 2.5,
                               width: MediaQuery
                                   .of(context)
                                   .size
@@ -294,7 +277,7 @@ class SigninState_ extends State {
                                     ElevatedButton(
                                       onPressed: () async {
                                         if (validateField()) {
-                                          await _signin();
+                                          await _signin(currentUser!);
                                         } else {
                                           setState(() {
                                             usernameValidate_ = true;
@@ -334,115 +317,6 @@ class SigninState_ extends State {
                                           style: GoogleFonts.openSans(
                                               color: Colors.blue,
                                               fontSize: 10),)),
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context, PageRouteBuilder(
-                                          pageBuilder: (context, animation,
-                                              secondaryAnimation) {
-                                            return SignUp();
-                                          },
-                                          transitionsBuilder: (context,
-                                              animation, secondaryAnimation,
-                                              child) {
-                                            const curve = Curves.easeInOut;
-
-                                            var scaleTween = Tween(
-                                                begin: 0.0, end: 1.0).chain(
-                                                CurveTween(curve: curve));
-
-                                            var scaleAnimation = animation
-                                                .drive(scaleTween);
-
-                                            return ScaleTransition(
-                                                scale: scaleAnimation,
-                                                child: child);
-                                          },
-                                          transitionDuration: Duration(
-                                              milliseconds: 200),
-                                        ),
-                                        );
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 10, bottom: 10),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment
-                                              .center,
-                                          children: [
-                                            Text('Create an account ?',
-                                              style: GoogleFonts.openSans(
-                                                  color: Colors.black,
-                                                  fontSize: 12),
-                                            ),
-                                            SizedBox(width: 10,),
-                                            Text('Sign Up',
-                                                style: GoogleFonts.openSans(
-                                                    color: primaryColor,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 12)),
-                                          ],),
-                                      ),
-                                    ),
-                                    Divider(
-                                      height: 1,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 20),
-                                      child: GestureDetector(
-                                        onTap: () async {
-                                          UserCredential? userCredential = await _handleSignIn();
-                                          if (userCredential != null) {
-                                            Navigator.push(context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        HomeScreen()));
-                                          }
-                                        },
-                                        child: Container(
-                                          height: 50,
-                                          width: MediaQuery
-                                              .of(context)
-                                              .size
-                                              .width / 1.7,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                                30),
-                                            color: Colors.white,
-                                            border: Border.all(
-                                              color: Colors.black45,
-                                              // Set the border color here
-                                              width: 1.0, // Set the border width here
-                                            ),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment
-                                                .center,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsets.fromLTRB(
-                                                    0, 10, 0, 10),
-                                                child: ClipRRect(
-                                                  child: Image.network(
-                                                      'https://seeklogo.com/images/G/google-logo-28FA7991AF-seeklogo.com.png'),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10),
-                                                child: Text(
-                                                  'Sign in with Google',
-                                                  style: GoogleFonts.roboto(
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight
-                                                          .bold,
-                                                      color: Colors.black54),),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    )
                                   ]
                               ),
                             )

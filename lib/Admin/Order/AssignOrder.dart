@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dash/flutter_dash.dart';
+import 'package:foodapp/Admin/Order/OrderManageHome.dart';
 import 'package:foodapp/config/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -55,7 +56,7 @@ class AssignOrderState extends State<AssignOrder> {
           'orderId': orderId,
         });
         print('Order added to userOrders successfully!');
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>newOrder()));
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>OrderManageHome()));
       } else {
         print('Partner not found');
       }
@@ -131,11 +132,7 @@ class AssignOrderState extends State<AssignOrder> {
                   if (!snapshot.hasData || snapshot.data == null) {
                     return Center(child: Text('No data available'));
                   }
-
-                  // Access the order data
                   Map<String, dynamic> orderData = snapshot.data!.data()!;
-
-                  // Display order details
                   return Container(
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,

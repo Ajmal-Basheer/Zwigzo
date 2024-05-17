@@ -36,6 +36,7 @@ import 'package:foodapp/Screens/Sections/CategorySec.dart';
 import 'package:foodapp/Screens/onBoarding/design.dart';
 import 'package:foodapp/SignIn/Signin.dart';
 import 'package:foodapp/SignUp/SignUp.dart';
+import 'package:foodapp/SplashScreen.dart';
 import 'package:foodapp/Test/signup2.dart';
 import 'package:foodapp/firebase_options.dart';
 import 'package:foodapp/Test/test.dart';
@@ -58,7 +59,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Zwigzo',
-      home: Signin(),
+      home: SplashScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

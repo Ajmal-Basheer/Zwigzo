@@ -8,6 +8,7 @@ import 'package:foodapp/Screens/Items/Cart.dart';
 import 'package:foodapp/Screens/Items/Wishlist.dart';
 import 'package:foodapp/Screens/Order/Orders.dart';
 import 'package:foodapp/Screens/Profile/Profile.dart';
+import 'package:foodapp/SignIn/Signin.dart';
 import 'package:foodapp/config/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -46,7 +47,7 @@ class drawerState extends State<drawer> {
   Future<void> _logout() async {
     try {
       await FirebaseAuth.instance.signOut();
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>Signin()));
     } catch (e) {
       print("Error logging out: $e");
     }

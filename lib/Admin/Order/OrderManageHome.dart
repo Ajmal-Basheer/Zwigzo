@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:foodapp/Admin/AdminHome.dart';
 import 'package:foodapp/Admin/Order/AdminOrdersHistory.dart';
 import 'package:foodapp/Admin/Order/newOrder.dart';
 import 'package:foodapp/config/colors.dart';
@@ -18,6 +19,17 @@ class OrderManageHomeState extends State {
     backgroundColor: scaffoldBackgroundColor,
     appBar: AppBar(
       backgroundColor: primaryColor,
+        actions: [
+        TextButton(
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>adminHome()));
+        },
+        child: Text(
+          'Cancel',
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
+      ],
       title: Text(
         'Order Manage',
         style: GoogleFonts.jost(fontSize: 20),
@@ -28,6 +40,7 @@ class OrderManageHomeState extends State {
           Navigator.of(context).pop();
         },
       ),
+
       bottom: TabBar(
           isScrollable: true,
           labelColor: Colors.white,

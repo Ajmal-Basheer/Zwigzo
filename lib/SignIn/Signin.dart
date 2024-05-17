@@ -110,6 +110,10 @@ class SigninState_ extends State {
             transitionDuration: Duration(milliseconds: 400),
           ),
         );
+        setState(() {
+          _usercontroller.clear();
+          _passcontroller.clear();
+        });
       }
     }
     } catch (e) {
